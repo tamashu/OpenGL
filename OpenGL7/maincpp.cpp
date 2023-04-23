@@ -69,7 +69,7 @@ void display(void)
     
 
     
-    glFlush();
+    
 
 }
 
