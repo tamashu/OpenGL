@@ -24,10 +24,10 @@ float convertGlobalCordinate_y(int y);
 int window_h;
 int window_w;
 
-float l = -5.0;
-float r = 5.0;
-float t = 5.0;
-float b = -5.0;
+float l = -10.0;
+float r = 10.0;
+float t = 10.0;
+float b = -10.0;
 
 //エラー退避用の処置
 float t_position_x = l * 0.9;
@@ -45,21 +45,26 @@ std::vector<float> s_0;//求める点
 std::vector<float> t_position = { t_position_x, t_position_y };//時刻の表示位置
 
 //制御点
-std::vector<float>p_0 = { -4.0,-4.0 };
-std::vector<float>p_1 = { -3.0,-1.0 };
-std::vector<float>p_2 = { -2.0,2.0 };
-std::vector<float>p_3 = { 0.0,4.5 };
-std::vector<float>p_4 = { 2.0,3.5 };
-std::vector<float>p_5 = { 3.0,2.5 };
-std::vector<float>p_6 = { 3.0,1.0 };
-std::vector<float>p_7 = { 0.0,-1.0 };
-std::vector<float>p_8 = { 3,0,-5.0};
-std::vector<float>p_9 = { -3,0,-5.0 };
-std::vector<float>p_10 = { 4,0,-5.0 };
+std::vector<float>p_0 = { -7.0,0.0 };
+std::vector<float>p_1 = { -7.0,-1.0 };
+std::vector<float>p_2 = { -7.0,-2.0 };
+std::vector<float>p_3 = { -7.0,-3.0 };
+std::vector<float>p_4 = { -7.0,-7.0 };
+std::vector<float>p_5 = { -5.5,-7.0 };
+std::vector<float>p_6 = { -4.0,-7.0 };
+std::vector<float>p_7 = { -2.5,-7.0 };
+std::vector<float>p_8 = { -1.0,-7.0 };
+std::vector<float>p_9 = { 0.5,-7.0 };
+std::vector<float>p_10 = { 2.0,-7.0 };
+std::vector<float>p_11 = { -1.0,2.0 };//
+std::vector<float>p_12 = { 0.5,2.0 };//
+std::vector<float>p_13 = { 2.0,2.0 };//
+std::vector<float>p_14 = { 3.5,2.0 };//
+std::vector<float>p_15 = { 5.0,2.0 };//
 
 
 //制御点のコンテナ
-std::vector<std::vector<float>> control_points = { p_0,p_1,p_2,p_3 ,p_4,p_5 ,p_6 ,p_7 ,p_8 ,p_9,p_10};
+std::vector<std::vector<float>> control_points = { p_0,p_1,p_2,p_3,p_4,p_5,p_6,p_7,p_8,p_9,p_10,p_11,p_12,p_13,p_14,p_15 };
 
 DrawBezier bezier = DrawBezier(control_points);
 
@@ -75,6 +80,7 @@ void display(void) {
 	
 	
 	s_0 = bezier.drawNDimensionBezier();
+	
 	drawString(t_position, t_now);
 	drawXAxis(1.0);
 	drawYAxis(0.5);
@@ -95,7 +101,7 @@ void display(void) {
 
 	glFlush();
 
-	std::cout << "call Display " << std::endl;
+	
 
 }
 
@@ -117,7 +123,7 @@ void resize(int w, int h)
 
 void specialKey(int key, int x, int y) {
 
-	float dt = 0.01; 
+	float dt = 0.1; 
 	int num_of_trails = 1.0 / dt;
 	
 
@@ -136,9 +142,10 @@ void specialKey(int key, int x, int y) {
 		trail.clear();
 		bezier.set_t(0.0);
 		for (int i = 0; i < num_of_trails; i ++) {
-			std::cout << "t: " << bezier.get_t() << std::endl;
+			//std::cout << "t: " << bezier.get_t() << std::endl;
 			bezier.set_t(bezier.get_t() + dt);
 			trail.push_back(bezier.drawNDimensionBezier());
+			std::cout << "R(" << bezier.get_t() << ") : (" << trail[i][0] << ", " << trail[i][1] << " )" << std::endl;
 		}
 		break;
 	case GLUT_KEY_LEFT:
