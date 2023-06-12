@@ -47,6 +47,12 @@ std::vector<std::vector<double>>readFile(std::string file_name) {
     }
 
     std::cout << ret.size() << std::endl;
+    std::cout << ret[0].size() << std::endl;
     
+    return ret;
+}
+
+double radToDegree(double input_rad) {
+    double ret = input_rad * (180 / PI);
     return ret;
 }

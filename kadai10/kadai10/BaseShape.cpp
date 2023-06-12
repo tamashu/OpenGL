@@ -11,6 +11,54 @@ BaseShape::BaseShape() {
 
 }
 
+void BaseShape::myBox(double x, double y, double z,double * color_rgba) //原点中心に±x,y,z
+{
+    GLdouble vertex[][3] = {
+      { -x, -y, -z },
+      {  x, -y, -z },
+      {  x,  y, -z },
+      { -x,  y, -z },
+      { -x, -y,  z },
+      {  x, -y,  z },
+      {  x,  y,  z },
+      { -x,  y,  z }
+    };
+
+    const static int face[][4] = {
+      { 0, 1, 2, 3 },
+      { 1, 5, 6, 2 },
+      { 5, 4, 7, 6 },
+      { 4, 0, 3, 7 },
+      { 4, 5, 1, 0 },
+      { 3, 2, 6, 7 }
+    };
+
+    const static GLdouble normal[][3] = {
+      { 0.0, 0.0,-1.0 },
+      { 1.0, 0.0, 0.0 },
+      { 0.0, 0.0, 1.0 },
+      {-1.0, 0.0, 0.0 },
+      { 0.0,-1.0, 0.0 },
+      { 0.0, 1.0, 0.0 }
+    };
+
+    const static GLfloat color[] = { color_rgba[0], color_rgba[1], color_rgba[2], color_rgba[3] };
+
+    int i, j;
+
+    /* 材質を設定する */
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
+
+    glBegin(GL_QUADS);
+    for (j = 0; j < 6; ++j) {
+        glNormal3dv(normal[j]);
+        for (i = 4; --i >= 0;) {
+            glVertex3dv(vertex[face[j][i]]);
+        }
+    }
+    glEnd();
+}
+
 void BaseShape::myBox(double x, double y, double z) //原点中心に±x,y,z
 {
     GLdouble vertex[][3] = {

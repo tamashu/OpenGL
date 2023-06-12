@@ -5,9 +5,18 @@
 
 #include "BasicCar.h"
 #include "BasicFunction.h"
+#include "DrawLine.h"
+
+#define MARGIN 5
+
+std::vector<std::vector<double>>car_tranjectory = readFile("test.csv");//車の軌跡のセット
+std::vector<std::vector<double>>bezier_curve = readFile("bezier.csv");//ベジェ曲線のセット
+std::vector<std::vector<double>>tranjectory;//軌跡
 
 //プリウス参照(ホイルベース2.75m,全長4.6, 幅1.78m,高さ1.42m,タイヤ半径0.317m) 
 BasicCar car = BasicCar(2.75, 1.78, 0.925, 1.420, 0.317);
+DrawLine line = DrawLine();
+
 int i = 0;
 
 /*
@@ -15,10 +24,12 @@ int i = 0;
  */
 static void display(void)
 {
-    const static GLfloat blue[] = { 0.2, 0.2, 0.8, 1.0 };     /* 球の色 */
+    double blue[] = { 0.2, 0.2, 0.8, 1.0 };  
+    double red[] = { 0.8, 0.2, 0.2, 1.0 };
+
     const static GLfloat lightpos[] = { 3.0, 4.0, 5.0, 1.0 }; /* 光源の位置 */
 
-  
+
 
     /* 画面クリア */
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -30,15 +41,23 @@ static void display(void)
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     /* 視点の移動（シーンの方を奥に移す）*/
-    //gluLookAt(10.0, 10.0, 6.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0);
-    gluLookAt(0.0, 0.0, 40.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+    //gluLookAt(car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2], 40.0, car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2]+1, 1.0, 0.0, 0.0, 1.0); //真上
+    gluLookAt(car_tranjectory[i][1]+MARGIN, -20.0, 1.0, car_tranjectory[i][1], -3.0, 0.0, 0.0, 0.0, 1.0); //真横(車追従)
+    //gluLookAt(car_tranjectory[i][1] + 15, car_tranjectory[i][2], 1.0, car_tranjectory[i][1], car_tranjectory[i][2], 0.0, 0.0, 0.0, 1.0); //真正面(車追従)
 
-    std::vector<std::vector<double>>result = readFile("test.csv");
+
+    line.drawCurve(bezier_curve,0.1,red);//ベジェ曲線の描画
+    line.drawCarTranjectory(tranjectory, 0.12, blue); //車の軌跡    
+
+    std::cout << "x[" << i << "]: "<< car_tranjectory[i][1] << "  y[" << i << "]: " << car_tranjectory[i][2]
+                  <<"  theta[" << i << "]: " << car_tranjectory[i][3] << "  phi" << i << "]: " << car_tranjectory[i][4]<<std::endl;
+
+    car.DrawCar(car_tranjectory[i][0],car_tranjectory[i][1], car_tranjectory[i][2], car_tranjectory[i][3], car_tranjectory[i][4]);
+
     
-    std::cout << "x[" << i << "]: "<< result[i][1] << "  y[" << i << "]: " << result[i][2] << std::endl;
-    car.DrawCar(result[i][1], result[i][2]);
+    
 
-    i++;
+
 
     glutSwapBuffers();
 
@@ -75,6 +94,34 @@ static void keyboard(unsigned char key, int x, int y)
     }
 }
 
+
+
+void timer(int value) {
+    i++;
+    if (i >= car_tranjectory.size()-1) {
+        i = 0;
+        tranjectory.clear();
+    }
+
+    if (i % 10 == 0) {
+        std::vector<double> car_position = { car_tranjectory[i][1], car_tranjectory[i][2] };
+        tranjectory.push_back(car_position);
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(40, timer, 0);
+}
+
+static void init(void)
+{
+    /* 初期設定 */
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+}
+
 void specialKey(int key, int x, int y) {
 
     float dt = 0.1;
@@ -86,29 +133,23 @@ void specialKey(int key, int x, int y) {
         i++;
         break;
     case GLUT_KEY_DOWN:
-        if(i-1 >0){
+        if (i - 1 > 0) {
             i--;
         }
         else {
             i = 0;
         }
-        
+
         break;
+    case GLUT_KEY_RIGHT:
+        glutTimerFunc(40, timer, 0);
+        break;
+
     default:
         break;
     }
     glutPostRedisplay();
 
-}
-
-static void init(void)
-{
-    /* 初期設定 */
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
 }
 
 int main(int argc, char* argv[])
@@ -122,6 +163,8 @@ int main(int argc, char* argv[])
     glutKeyboardFunc(keyboard);
     glutSpecialFunc(specialKey);
     init();
+    
+
     glutMainLoop();
     return 0;
 }
