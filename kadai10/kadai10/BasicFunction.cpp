@@ -35,7 +35,7 @@ std::vector<std::vector<double>>readFile(std::string file_name) {
     std::string str;
 
     if (ifs.fail()) {
-        std::cerr << "Failed to open file." << std::endl;
+        std::cerr << "Failed to open file:"<<file_name << std::endl;
         exit(1);
     }
     while (getline(ifs, str)) {

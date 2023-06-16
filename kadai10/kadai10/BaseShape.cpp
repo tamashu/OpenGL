@@ -13,6 +13,7 @@ BaseShape::BaseShape() {
 
 void BaseShape::myBox(double x, double y, double z,double * color_rgba) //原点中心に±x,y,z
 {
+
     GLdouble vertex[][3] = {
       { -x, -y, -z },
       {  x, -y, -z },
@@ -46,6 +47,8 @@ void BaseShape::myBox(double x, double y, double z,double * color_rgba) //原点中
 
     int i, j;
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     /* 材質を設定する */
     glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 
@@ -57,6 +60,7 @@ void BaseShape::myBox(double x, double y, double z,double * color_rgba) //原点中
         }
     }
     glEnd();
+    glDisable(GL_BLEND);
 }
 
 void BaseShape::myBox(double x, double y, double z) //原点中心に±x,y,z
@@ -90,7 +94,7 @@ void BaseShape::myBox(double x, double y, double z) //原点中心に±x,y,z
       { 0.0, 1.0, 0.0 }
     };
 
-    const static GLfloat red[] = { 0.8, 0.2, 0.2, 1.0 };
+    const static GLfloat red[] = { 0.8, 0.2, 0.2, 0.4 };
 
     int i, j;
 
@@ -177,6 +181,18 @@ void BaseShape::myBox(double x, double y, double z) //原点中心に±x,y,z
     }
     glEnd();
 }
+
+ void BaseShape::triangle(std::vector<double>p0, std::vector<double>p1, std::vector<double>p2, double* color)
+ {
+     const static GLfloat colors[] = { color[0], color[1], color[2], color[3] };
+     glMaterialfv(GL_FRONT, GL_DIFFUSE, colors);
+
+     glBegin(GL_TRIANGLES);
+     glVertex3d(p0[0], p0[1], p0[2]);
+     glVertex3d(p1[0], p1[1], p1[2]);
+     glVertex3d(p2[0], p2[1], p2[2]);
+     glEnd();
+ }
 
 
 

@@ -17,6 +17,8 @@ std::vector<std::vector<double>>tranjectory;//軌跡
 BasicCar car = BasicCar(2.75, 1.78, 0.925, 1.420, 0.317);
 DrawLine line = DrawLine();
 
+bool is_start = false;
+
 int i = 0;
 
 /*
@@ -42,8 +44,9 @@ static void display(void)
 
     /* 視点の移動（シーンの方を奥に移す）*/
     //gluLookAt(car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2], 40.0, car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2]+1, 1.0, 0.0, 0.0, 1.0); //真上
-    gluLookAt(car_tranjectory[i][1]+MARGIN, -20.0, 1.0, car_tranjectory[i][1], -3.0, 0.0, 0.0, 0.0, 1.0); //真横(車追従)
-    //gluLookAt(car_tranjectory[i][1] + 15, car_tranjectory[i][2], 1.0, car_tranjectory[i][1], car_tranjectory[i][2], 0.0, 0.0, 0.0, 1.0); //真正面(車追従)
+    //gluLookAt(car_tranjectory[i][1]+MARGIN, -20.0, 1.0, car_tranjectory[i][1], -3.0, 0.0, 0.0, 0.0, 1.0); //真横(車追従)
+    gluLookAt(car_tranjectory[i][1] + 15, car_tranjectory[i][2], 1.0, car_tranjectory[i][1], car_tranjectory[i][2], 0.0, 0.0, 0.0, 1.0); //真正面(車追従)
+
 
 
     line.drawCurve(bezier_curve,0.1,red);//ベジェ曲線の描画
@@ -53,10 +56,6 @@ static void display(void)
                   <<"  theta[" << i << "]: " << car_tranjectory[i][3] << "  phi" << i << "]: " << car_tranjectory[i][4]<<std::endl;
 
     car.DrawCar(car_tranjectory[i][0],car_tranjectory[i][1], car_tranjectory[i][2], car_tranjectory[i][3], car_tranjectory[i][4]);
-
-    
-    
-
 
 
     glutSwapBuffers();
@@ -97,7 +96,10 @@ static void keyboard(unsigned char key, int x, int y)
 
 
 void timer(int value) {
-    i++;
+    if (is_start) {
+        i++;
+    }
+    
     if (i >= car_tranjectory.size()-1) {
         i = 0;
         tranjectory.clear();
@@ -142,8 +144,16 @@ void specialKey(int key, int x, int y) {
 
         break;
     case GLUT_KEY_RIGHT:
+        is_start = true;
         glutTimerFunc(40, timer, 0);
         break;
+    case GLUT_KEY_LEFT:
+        if (is_start) {
+            is_start = false;
+        }
+        else {
+            is_start = true;
+        }
 
     default:
         break;

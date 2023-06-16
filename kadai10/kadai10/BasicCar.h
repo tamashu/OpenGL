@@ -3,7 +3,8 @@
 
 #define WHEEL_WIDTH 0.2
 #define TILE_LENGTH 40
-#define MARGIN 0.05
+#define HEIGHT_MARGIN 0.05
+#define WHEEL_MARGIN 0.05
 
 class BasicCar : public BaseShape
 {
