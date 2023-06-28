@@ -11,6 +11,7 @@
 
 std::vector<std::vector<double>>car_tranjectory = readFile("test.csv");//車の軌跡のセット
 std::vector<std::vector<double>>bezier_curve = readFile("bezier.csv");//ベジェ曲線のセット
+std::vector<std::vector<double>>v = readFile("d_theta_p.csv");
 std::vector<std::vector<double>>tranjectory;//軌跡
 
 //プリウス参照(ホイルベース2.75m,全長4.6, 幅1.78m,高さ1.42m,タイヤ半径0.317m) 
@@ -43,19 +44,20 @@ static void display(void)
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     /* 視点の移動（シーンの方を奥に移す）*/
-    //gluLookAt(car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2], 40.0, car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2]+1, 1.0, 0.0, 0.0, 1.0); //真上
+    gluLookAt(car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2], 40.0, car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2]+1, 1.0, 0.0, 0.0, 1.0); //真上
     //gluLookAt(car_tranjectory[i][1]+MARGIN, -20.0, 1.0, car_tranjectory[i][1], -3.0, 0.0, 0.0, 0.0, 1.0); //真横(車追従)
-    gluLookAt(car_tranjectory[i][1] + 15, car_tranjectory[i][2], 1.0, car_tranjectory[i][1], car_tranjectory[i][2], 0.0, 0.0, 0.0, 1.0); //真正面(車追従)
+    //gluLookAt(car_tranjectory[i][1] + 15, car_tranjectory[i][2], 1.0, car_tranjectory[i][1], car_tranjectory[i][2], 0.0, 0.0, 0.0, 1.0); //真正面(車追従)
 
 
 
     line.drawCurve(bezier_curve,0.1,red);//ベジェ曲線の描画
     line.drawCarTranjectory(tranjectory, 0.12, blue); //車の軌跡    
 
-    std::cout << "x[" << i << "]: "<< car_tranjectory[i][1] << "  y[" << i << "]: " << car_tranjectory[i][2]
-                  <<"  theta[" << i << "]: " << car_tranjectory[i][3] << "  phi" << i << "]: " << car_tranjectory[i][4]<<std::endl;
+    /*std::cout << "x[" << i << "]: "<< car_tranjectory[i][1] << "  y[" << i << "]: " << car_tranjectory[i][2]
+                  <<"  theta[" << i << "]: " << car_tranjectory[i][3] << "  phi[" << i << "]: " << car_tranjectory[i][4]<<
+        "v1: "<< v[i][3] << std::endl;*/
 
-    car.DrawCar(car_tranjectory[i][0],car_tranjectory[i][1], car_tranjectory[i][2], car_tranjectory[i][3], car_tranjectory[i][4]);
+    car.DrawCar(car_tranjectory[i][0],car_tranjectory[i][1], car_tranjectory[i][2], car_tranjectory[i][3], car_tranjectory[i][4],v[i][3]);
 
 
     glutSwapBuffers();

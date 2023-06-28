@@ -18,17 +18,20 @@ BasicCar::BasicCar(double wheel_base, double width, double overhang, double heig
 	this->front_body_center_x = 3.0*length / 4.0 - overhang;
 
 	this->v1 = 1.0;
-	this->wheel_rps = v1 / wheel_radius;//rad/s
+	
 
 
 }
 
-void BasicCar::DrawCar(double t,double x, double y,double theta_rad,double phi_rad) {
+void BasicCar::DrawCar(double t,double x, double y,double theta_rad,double phi_rad,double v1) {
+	this->wheel_rps = v1 / wheel_radius;//rad/s
 	double body_color[] = { 0.5,0.2,0.2,0.8 };
 	double theta_deg = radToDegree(theta_rad);
 	double phi_deg = radToDegree(phi_rad);
-	double wheel_rotation = radToDegree( wheel_rps * t);
 	double steer_cylinder_width = 0.05;
+	double delta_t = t - this->t; //‘O‰ñ‚ÌŽžŠÔ‚Æ‚Ì·•ª
+	wheel_rotation += radToDegree(wheel_rps * delta_t);
+	this->t = t;
 
 	myGround(0.0,TILE_LENGTH);
 	

@@ -10,7 +10,7 @@ class BasicCar : public BaseShape
 {
 public:
 	BasicCar(double wheel_base, double width, double overhang,double height,double wheel_radius);
-	void DrawCar(double t, double x, double y, double theta_rad, double phi_rad);
+	void DrawCar(double t, double x, double y, double theta_rad, double phi_rad,double v1);
 
 private:
 	void myWheel(double r, double width, int sides);
@@ -29,5 +29,7 @@ private:
 
 	double v1;//車の速度
 	double wheel_rps;//タイヤの回転速度
+	double t;
+	double wheel_rotation;
 };
 
