@@ -39,7 +39,6 @@ std::vector<std::vector<double>>readFile(std::string file_name) {
         exit(1);
     }
     while (getline(ifs, str)) {
-        getline(ifs, str);
        // std::cout << str << std::endl;
         line = mySplit(str, ',');
  

@@ -10,7 +10,7 @@
 #define MARGIN 5
 
 std::vector<std::vector<double>>car_tranjectory = readFile("test.csv");//車の軌跡のセット
-std::vector<std::vector<double>>bezier_curve = readFile("bezier.csv");//ベジェ曲線のセット
+std::vector<std::vector<double>>serpenid_curve = readFile("serpenoid_for_CG.csv");//ベジェ曲線のセット
 std::vector<std::vector<double>>v = readFile("d_theta_p.csv");
 std::vector<std::vector<double>>tranjectory;//軌跡
 
@@ -50,7 +50,7 @@ static void display(void)
 
 
 
-    line.drawCurve(bezier_curve,0.1,red);//ベジェ曲線の描画
+    line.drawCurve(serpenid_curve,0.1,red);//ベジェ曲線の描画
     line.drawCarTranjectory(tranjectory, 0.12, blue); //車の軌跡    
 
     /*std::cout << "x[" << i << "]: "<< car_tranjectory[i][1] << "  y[" << i << "]: " << car_tranjectory[i][2]
