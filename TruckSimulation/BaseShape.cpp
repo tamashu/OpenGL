@@ -187,12 +187,60 @@ void BaseShape::myBox(double x, double y, double z) //原点中心に±x,y,z
      const static GLfloat colors[] = { color[0], color[1], color[2], color[3] };
      glMaterialfv(GL_FRONT, GL_DIFFUSE, colors);
 
+     //三角形の重心
+     double g_x = (p0[0] + p1[0] + p2[0])/3.0;
+     double g_y = (p0[1] + p1[1] + p2[1]) / 3.0;
+     double g_z = (p0[2] + p1[2] + p2[2]) / 3.0;
+
+     
+
      glBegin(GL_TRIANGLES);
+     glNormal3d(g_x, g_y, g_z);
+
      glVertex3d(p0[0], p0[1], p0[2]);
      glVertex3d(p1[0], p1[1], p1[2]);
      glVertex3d(p2[0], p2[1], p2[2]);
      glEnd();
  }
 
+ void BaseShape::trianglePole(double width, double height, double thick) { //中心と高さ、厚みは上に
 
+     glBegin(GL_TRIANGLES);
+     glNormal3d(0.0, 0.0, 1.0);
+
+     glVertex3d(-width, 0.0, -thick);
+     glVertex3d(width, 0.0, -thick);
+     glVertex3d(0.0, height, -thick);
+
+     glVertex3d(-width, 0.0, thick);
+     glVertex3d(width, 0.0, thick);
+     glVertex3d(0.0, height, thick);
+     glEnd;
+
+     //側面
+     glBegin(GL_QUADS);
+     glNormal3d(0.0, -1.0, 0.0);
+     glVertex3d(-width, 0.0, -thick);
+     glVertex3d(width, 0.0, -thick);
+     glVertex3d(width, 0.0, thick);
+     glVertex3d(-width, 0.0, thick);
+     glEnd();
+
+     glBegin(GL_QUADS);
+     glNormal3d(width, height, 1.0);
+     glVertex3d(0.0, height, thick);
+     glVertex3d(0.0, height, -thick);
+     glVertex3d(-width, 0.0, -thick);
+     glVertex3d(-width, 0.0, thick);
+     glEnd();
+
+     glBegin(GL_QUADS);
+     glNormal3d(-width, height, 1.0);
+     glVertex3d(width, 0.0, -thick);
+     glVertex3d(width, 0.0, thick);
+     glVertex3d(0.0, height, -thick);
+     glVertex3d(0.0, height, thick);
+     glEnd();
+
+ }
 

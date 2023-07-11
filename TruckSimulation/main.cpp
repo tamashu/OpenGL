@@ -30,8 +30,8 @@ static void display(void)
     double blue[] = { 0.2, 0.2, 0.8, 1.0 };  
     double red[] = { 0.8, 0.2, 0.2, 1.0 };
 
-    //const static GLfloat lightpos[] = { 3.0, 4.0, 5.0, 1.0 }; /* 光源の位置 */
-    const static GLfloat lightpos[] = { 0.0, 0.0, 10.0, 1.0 }; /* 光源の位置 */
+    const static GLfloat lightpos[] = { 3.0, 4.0, 5.0, 1.0 }; /* 光源の位置 */
+    //const static GLfloat lightpos[] = { 0.0, 0.0, 10.0, 1.0 }; /* 光源の位置 */
 
 
     /* 画面クリア */
@@ -44,8 +44,8 @@ static void display(void)
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     /* 視点の移動（シーンの方を奥に移す）*/
-    gluLookAt(car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2], 40.0, car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2]+1, 1.0, 0.0, 0.0, 1.0); //真上
-    //gluLookAt(car_tranjectory[i][1]+MARGIN, -20.0, 1.0, car_tranjectory[i][1], -3.0, 0.0, 0.0, 0.0, 1.0); //真横(車追従)
+    gluLookAt(car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2], 20.0, car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2]+1, 1.0, 0.0, 0.0, 1.0); //真上
+    //gluLookAt(car_tranjectory[i][1]+MARGIN, -8.0, 1.0, car_tranjectory[i][1], -3.0, 0.0, 0.0, 0.0, 1.0); //真横(車追従)
     //gluLookAt(car_tranjectory[i][1] + 15, car_tranjectory[i][2], 1.0, car_tranjectory[i][1], car_tranjectory[i][2], 0.0, 0.0, 0.0, 1.0); //真正面(車追従)
 
 
@@ -53,7 +53,7 @@ static void display(void)
     *                           車の描画
     *---------------------------------------------------------------------------------------------*/
     double t  = status[i][0]; 
-    double v1 = status[i][5] ; 
+    double v1 = status[i][5]; 
 
     //前の車
     double x1 = car_tranjectory[i][1]; double y1 = car_tranjectory[i][2]; 
@@ -66,12 +66,13 @@ static void display(void)
     double x3 = status[i][3]; double y3 = status[i][4];
     double theta3_rad = car_tranjectory[i][7]; double phi2_rad = car_tranjectory[i][5];
 
+    std::cout << "x1: " << x1 << " y1:  " << y1 << std::endl;
+
     //描画
     line.drawCarTranjectory(tranjectory, 0.12, blue); //車の軌跡    
     truck.DrawTruck( t,  v1,  x1,  y1,  theta1_rad,  phi1_rad,  //前の車
                      x2,  y2,  theta2_rad,					//荷台
                      x3,  y3,  theta3_rad,  phi2_rad);
-
 
     glutSwapBuffers();
 

@@ -10,7 +10,9 @@ class BasicCar : public BaseShape
 {
 public:
 	BasicCar(double wheel_base);
+	double getCenterZ();
 	void DrawCar(double t, double x, double y, double theta_rad, double phi_rad,double v1);
+	
 
 private:
 	void myWheel(double r, double width, int sides);
@@ -35,7 +37,6 @@ private:
 	const double WHEEL_WIDTH; //タイヤの幅
 	const double HEIGHT_MARGIN; //車体とタイヤ高さの空きスペース
 	const double WHEEL_MARGIN; //車体とタイヤ横の空きスペース
-
 
 };
 

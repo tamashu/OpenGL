@@ -19,8 +19,15 @@ BasicCar::BasicCar(double wheel_base):WHEEL_WIDTH(0.0727*wheel_base),HEIGHT_MARG
 	this->back_body_center_x = this->length / 4.0 - this->overhang;
 	this->front_body_center_x = 3.0*this->length / 4.0 - this->overhang;
 
+	this->wheel_rps = v1 / wheel_radius;//rad/s
+	this->t = 0.0;
 	this->v1 = 1.0;
+	
 
+}
+
+double BasicCar::getCenterZ() {
+	return center_z;
 }
 
 void BasicCar::DrawCar(double t,double x, double y,double theta_rad,double phi_rad,double v1) {
@@ -35,6 +42,7 @@ void BasicCar::DrawCar(double t,double x, double y,double theta_rad,double phi_r
 
 	myGround(0.0,TILE_LENGTH);
 	
+	glPushMatrix();
 	glTranslated(x, y, center_z+ HEIGHT_MARGIN);
 	glRotated(theta_deg, 0.0, 0.0, 1.0);
 
@@ -84,7 +92,6 @@ void BasicCar::DrawCar(double t,double x, double y,double theta_rad,double phi_r
 	//‘O—Ö(‰E)
 	glPushMatrix();
 	glTranslated(wheel_base, -width / 2 - WHEEL_MARGIN, -height / 2 - HEIGHT_MARGIN);
-	glPushMatrix();
 	glRotated(phi_deg, 0.0, 0.0, 1.0);
 	glRotated(90.0, 1.0, 0.0, 0.0);
 	glRotated(wheel_rotation, 0.0, 0.0, -1.0);//ŽÔ—Ö‚Ì‰ñ“]
@@ -100,6 +107,7 @@ void BasicCar::DrawCar(double t,double x, double y,double theta_rad,double phi_r
 	myWheel(wheel_radius, WHEEL_WIDTH, 16);
 	glPopMatrix();
 
+	glPopMatrix();
 }
 
 void BasicCar::myWheel(double radius, double height, int sides) {
