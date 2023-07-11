@@ -4,22 +4,22 @@
 
 #include "BasicFunction.h"
 
+//比率（数字）はプリウス参照
+//プリウス参照(ホイルベース2.75m,全長4.6, 幅1.78m,高さ1.42m,タイヤ半径0.317m) 
+BasicCar::BasicCar(double wheel_base):WHEEL_WIDTH(0.0727*wheel_base),HEIGHT_MARGIN(0.0181*wheel_base),WHEEL_MARGIN(0.0181*wheel_base){
 
-BasicCar::BasicCar(double wheel_base, double width, double overhang, double height,double wheel_radius) {
 	this->wheel_base = wheel_base;
-	this->width = width;
-	this->overhang = overhang;
-	this->height = height;
-	this->wheel_radius = wheel_radius;
+	this->width = 0.647 * wheel_base;
+	this->overhang = 0.336 * wheel_base;
+	this->height = 0.516 * wheel_base;
+	this->wheel_radius = 0.115 * wheel_base;
 
-	this->length = wheel_base + 2 * overhang;
-	this->center_z = height / 2 + wheel_radius;
-	this->back_body_center_x = length / 4.0 - overhang;
-	this->front_body_center_x = 3.0*length / 4.0 - overhang;
+	this->length = wheel_base + 2 * this->overhang;
+	this->center_z = this->height / 2 + this->wheel_radius;
+	this->back_body_center_x = this->length / 4.0 - this->overhang;
+	this->front_body_center_x = 3.0*this->length / 4.0 - this->overhang;
 
 	this->v1 = 1.0;
-	
-
 
 }
 
@@ -44,7 +44,6 @@ void BasicCar::DrawCar(double t,double x, double y,double theta_rad,double phi_r
 	glTranslated(wheel_base, 0.0, -height / 2 - HEIGHT_MARGIN);
 	glRotated(90.0, 1.0, 0.0, 0.0);
 	myCylinder(steer_cylinder_width, width / 2.0 + WHEEL_MARGIN, 16);
-	std::cout << width / 2.0 << std::endl;
 	glPopMatrix();
 
 	//後輪ステアリングの棒
@@ -101,11 +100,6 @@ void BasicCar::DrawCar(double t,double x, double y,double theta_rad,double phi_r
 	myWheel(wheel_radius, WHEEL_WIDTH, 16);
 	glPopMatrix();
 
-	
-
-	
-	
-	
 }
 
 void BasicCar::myWheel(double radius, double height, int sides) {

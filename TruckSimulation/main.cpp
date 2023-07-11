@@ -3,19 +3,19 @@
 #include <GL/glut.h>
 #include <iostream>
 
-#include "BasicCar.h"
+#include "CooperativeTruck.h"
 #include "BasicFunction.h"
 #include "DrawLine.h"
 
-#define MARGIN 5
+#define MARGIN 0
 
 std::vector<std::vector<double>>car_tranjectory = readFile("test.csv");//車の軌跡のセット
-std::vector<std::vector<double>>clothoid_curve = readFile("serpenoid_for_CG.csv");//ベジェ曲線のセット
-std::vector<std::vector<double>>v = readFile("d_theta_p.csv");
+//std::vector<std::vector<double>>clothoid_curve = readFile("serpenoid_for_CG.csv");//ベジェ曲線のセット
+std::vector<std::vector<double>>status = readFile("d_theta_p.csv");
 std::vector<std::vector<double>>tranjectory;//軌跡
 
 //プリウス参照(ホイルベース2.75m,全長4.6, 幅1.78m,高さ1.42m,タイヤ半径0.317m) 
-BasicCar car = BasicCar(2.75, 1.78, 0.925, 1.420, 0.317);
+CooperativeTruck truck(L1, L2, L3);
 DrawLine line = DrawLine();
 
 bool is_start = false;
@@ -30,8 +30,8 @@ static void display(void)
     double blue[] = { 0.2, 0.2, 0.8, 1.0 };  
     double red[] = { 0.8, 0.2, 0.2, 1.0 };
 
-    const static GLfloat lightpos[] = { 3.0, 4.0, 5.0, 1.0 }; /* 光源の位置 */
-
+    //const static GLfloat lightpos[] = { 3.0, 4.0, 5.0, 1.0 }; /* 光源の位置 */
+    const static GLfloat lightpos[] = { 0.0, 0.0, 10.0, 1.0 }; /* 光源の位置 */
 
 
     /* 画面クリア */
@@ -49,15 +49,28 @@ static void display(void)
     //gluLookAt(car_tranjectory[i][1] + 15, car_tranjectory[i][2], 1.0, car_tranjectory[i][1], car_tranjectory[i][2], 0.0, 0.0, 0.0, 1.0); //真正面(車追従)
 
 
+    /*---------------------------------------------------------------------------------------------
+    *                           車の描画
+    *---------------------------------------------------------------------------------------------*/
+    double t  = status[i][0]; 
+    double v1 = status[i][5] ; 
 
-    line.drawCurve(clothoid_curve,0.1,red);//ベジェ曲線の描画
+    //前の車
+    double x1 = car_tranjectory[i][1]; double y1 = car_tranjectory[i][2]; 
+    double theta1_rad = car_tranjectory[i][4]; double phi1_rad = car_tranjectory[i][3];
+
+    //荷台
+    double x2 = status[i][1]; double y2 = status[i][2]; double theta2_rad = car_tranjectory[i][6];
+
+    //後ろの車
+    double x3 = status[i][3]; double y3 = status[i][4];
+    double theta3_rad = car_tranjectory[i][7]; double phi2_rad = car_tranjectory[i][5];
+
+    //描画
     line.drawCarTranjectory(tranjectory, 0.12, blue); //車の軌跡    
-
-    /*std::cout << "x[" << i << "]: "<< car_tranjectory[i][1] << "  y[" << i << "]: " << car_tranjectory[i][2]
-                  <<"  theta[" << i << "]: " << car_tranjectory[i][3] << "  phi[" << i << "]: " << car_tranjectory[i][4]<<
-        "v1: "<< v[i][3] << std::endl;*/
-
-    car.DrawCar(car_tranjectory[i][0],car_tranjectory[i][1], car_tranjectory[i][2], car_tranjectory[i][3], car_tranjectory[i][4],v[i][3]);
+    truck.DrawTruck( t,  v1,  x1,  y1,  theta1_rad,  phi1_rad,  //前の車
+                     x2,  y2,  theta2_rad,					//荷台
+                     x3,  y3,  theta3_rad,  phi2_rad);
 
 
     glutSwapBuffers();
