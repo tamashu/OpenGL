@@ -38,6 +38,42 @@ void DrawLine::drawCarTranjectory(std::vector<std::vector<double>>points, double
 	}
 }
 
+void DrawLine::drawCarTranjectory1(std::vector<std::vector<double>>points, double z, double* color) {
+	int vector_size = points.size();
+
+	const static GLfloat colors[] = { color[0], color[1] , color[2], 0.9 };
+
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, colors);
+	glNormal3d(0.0, 0.0, 1.0);
+
+	glPointSize(8);
+	if (vector_size > 1) {
+		for (int i = 0; i < vector_size - 1; i++) {
+			glBegin(GL_POINTS);
+			glVertex3d(points[i][0], points[i][1], z);
+			glEnd();
+		}
+	}
+}
+
+void DrawLine::drawCarTranjectory2(std::vector<std::vector<double>>points, double z, double* color) {
+	int vector_size = points.size();
+
+	const static GLfloat colors[] = { color[0], color[1] , color[2], 0.9 };
+
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, colors);
+	glNormal3d(0.0, 0.0, 1.0);
+
+	glPointSize(8);
+	if (vector_size > 1) {
+		for (int i = 0; i < vector_size - 1; i++) {
+			glBegin(GL_POINTS);
+			glVertex3d(points[i][0], points[i][1], z);
+			glEnd();
+		}
+	}
+}
+
 
 
 void DrawLine::drawLine(std::vector<double> p0, std::vector<double> p1,double z) {

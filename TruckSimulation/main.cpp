@@ -10,9 +10,11 @@
 #define MARGIN 0
 
 std::vector<std::vector<double>>car_tranjectory = readFile("test.csv");//車の軌跡のセット
-//std::vector<std::vector<double>>clothoid_curve = readFile("serpenoid_for_CG.csv");//ベジェ曲線のセット
+std::vector<std::vector<double>>bezier_curve = readFile("bezier.csv");//ベジェ曲線のセット
 std::vector<std::vector<double>>status = readFile("d_theta_p.csv");
-std::vector<std::vector<double>>tranjectory;//軌跡
+std::vector<std::vector<double>>front_tranjectory;//軌跡
+std::vector<std::vector<double>>carrier_tranjectory;//軌跡
+std::vector<std::vector<double>>rear_tranjectory;//軌跡
 
 //プリウス参照(ホイルベース2.75m,全長4.6, 幅1.78m,高さ1.42m,タイヤ半径0.317m) 
 CooperativeTruck truck(L1, L2, L3);
@@ -27,8 +29,10 @@ int i = 0;
  */
 static void display(void)
 {
-    double blue[] = { 0.2, 0.2, 0.8, 1.0 };  
-    double red[] = { 0.8, 0.2, 0.2, 1.0 };
+    double blue[]   = { 0.2, 0.2, 0.8, 1.0 };  
+    double red[]    = { 0.8, 0.2, 0.2, 1.0 };
+    double green[]  = { 0.2, 0.8, 0.2, 1.0 };
+    double yellow[] = { 0.8, 0.8, 0.0 ,1.0 };
 
     const static GLfloat lightpos[] = { 3.0, 4.0, 5.0, 1.0 }; /* 光源の位置 */
     //const static GLfloat lightpos[] = { 0.0, 0.0, 10.0, 1.0 }; /* 光源の位置 */
@@ -44,7 +48,8 @@ static void display(void)
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     /* 視点の移動（シーンの方を奥に移す）*/
-    gluLookAt(car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2], 20.0, car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2]+1, 1.0, 0.0, 0.0, 1.0); //真上
+    //gluLookAt(car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2], 20.0, car_tranjectory[i][1] + MARGIN, car_tranjectory[i][2]+1, 1.0, 0.0, 0.0, 1.0); //真上
+    gluLookAt(status[i][1] + MARGIN, status[i][2], 30.0, status[i][1] + MARGIN, status[i][2] +1, 1.0, 0.0, 0.0, 1.0); //荷台から
     //gluLookAt(car_tranjectory[i][1]+MARGIN, -8.0, 1.0, car_tranjectory[i][1], -3.0, 0.0, 0.0, 0.0, 1.0); //真横(車追従)
     //gluLookAt(car_tranjectory[i][1] + 15, car_tranjectory[i][2], 1.0, car_tranjectory[i][1], car_tranjectory[i][2], 0.0, 0.0, 0.0, 1.0); //真正面(車追従)
 
@@ -66,14 +71,20 @@ static void display(void)
     double x3 = status[i][3]; double y3 = status[i][4];
     double theta3_rad = car_tranjectory[i][7]; double phi2_rad = car_tranjectory[i][5];
 
-    std::cout << "x1: " << x1 << " y1:  " << y1 << std::endl;
+    //std::cout << "x1: " << x1 << " y1:  " << y1 << std::endl;
+    //std::cout << "carrier_tranjectory: " << carrier_tranjectory.size() << "rear_tranjectory: " << rear_tranjectory.size() << std::endl;
 
     //描画
-    line.drawCarTranjectory(tranjectory, 0.12, blue); //車の軌跡    
+    line.drawCarTranjectory(front_tranjectory, 0.12, blue); //車の軌跡  
+    line.drawCarTranjectory1(carrier_tranjectory, 0.12, green); //車の軌跡  
+    line.drawCarTranjectory2(rear_tranjectory, 0.12, yellow); //車の軌跡  
+    line.drawCurve(bezier_curve, 0.11, red);
+    
+
     truck.DrawTruck( t,  v1,  x1,  y1,  theta1_rad,  phi1_rad,  //前の車
                      x2,  y2,  theta2_rad,					//荷台
                      x3,  y3,  theta3_rad,  phi2_rad);
-
+    
     glutSwapBuffers();
 
     glFlush();
@@ -118,12 +129,19 @@ void timer(int value) {
     
     if (i >= car_tranjectory.size()-1) {
         i = 0;
-        tranjectory.clear();
+        front_tranjectory.clear();
+        carrier_tranjectory.clear();
+        rear_tranjectory.clear();
     }
 
     if (i % 10 == 0) {
-        std::vector<double> car_position = { car_tranjectory[i][1], car_tranjectory[i][2] };
-        tranjectory.push_back(car_position);
+        std::vector<double> front_position = { car_tranjectory[i][1], car_tranjectory[i][2] };
+        std::vector<double> carrier_position = { status[i][1], status[i][2] };
+        std::vector<double> rear_position = { status[i][3], status[i][4] };
+
+        front_tranjectory.push_back(front_position);
+        carrier_tranjectory.push_back(carrier_position);
+        rear_tranjectory.push_back(rear_position);
     }
 
     glutPostRedisplay();

@@ -18,7 +18,7 @@ void CooperativeTruck::DrawTruck(double t, double v1, double x1, double y1, doub
 {
 	drawCarrier(x2, y2, theta2_rad, 0.02);
 	front_car.DrawCar(t, x1, y1, theta1_rad, phi1_rad, v1);
-	rear_car.DrawCar(t, x3, y3, theta3_rad , phi2_rad, -v1);
+	rear_car.DrawCar(t, x3, y3, theta3_rad+PI , phi2_rad+PI, -v1);
 }
 
 void CooperativeTruck::drawCarrier(double x2, double y2, double theta2_rad , double thick) {
